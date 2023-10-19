@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'django_bt.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_bt',  # Tên cơ sở dữ liệu MySQL của bạn
+        'NAME': 'django_bt1',  # Tên cơ sở dữ liệu MySQL của bạn
         'USER': 'phpmyadmin',  # Tên người dùng MySQL
         'PASSWORD': '12345678',  # Mật khẩu người dùng MySQL
         'HOST': 'localhost',  # Host MySQL (thường là 'localhost' nếu chạy trên cùng máy)

@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import generics
 
 from .models import AddSuKien, Comment, ReportComment, ReportSuKien, SavedImage, SavedNotification, SavedSuKien, \
@@ -17,8 +18,14 @@ class AddSuKienDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CommentList(generics.ListCreateAPIView):
-    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        queryset = Comment.objects.all()
+        ip_comment = self.request.query_params.get('ip')
+        if ip_comment is not None:
+            queryset = queryset.filter(IP_Comment__icontains=ip_comment)
+        return queryset
 
 
 class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -93,10 +100,16 @@ class UserList(generics.ListCreateAPIView):
         queryset = User.objects.all()
         email = self.request.query_params.get('email')
         ip_register = self.request.query_params.get('ip')
+        comment = self.request.query_params.get('comment')
+        event = self.request.query_params.get('event')
         if email is not None:
-            queryset = queryset.filter(email__contains=email)
+            queryset = queryset.filter(email__icontains=email)
         elif ip_register is not None:
-            queryset = queryset.filter(ip_register__contains=ip_register)
+            queryset = queryset.filter(ip_register__icontains=ip_register)
+        elif comment is not None:
+            queryset = queryset.filter(Q(comment__noi_dung_Comment__icontains=comment))
+        elif event is not None:
+            queryset = queryset.filter(Q(addsukien__ten_su_kien__icontains=event))
         return queryset
 
 
