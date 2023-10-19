@@ -13,6 +13,21 @@ class User(models.Model):
     count_view = models.IntegerField()
 
 
+class UserCommentDTO:
+    def __init__(self, user, comment="", event=""):
+        self.link_avatar = user.link_avatar
+        self.user_name = user.user_name
+        self.ip_register = user.ip_register
+        self.device_register = user.device_register
+        self.password = user.password
+        self.email = user.email
+        self.count_sukien = user.count_sukien
+        self.count_comment = user.count_comment
+        self.count_view = user.count_view
+        self.comment = comment
+        self.event = event
+
+
 class AddSuKien(models.Model):
     id_toan_bo_su_kien = models.TextField()
     ten_su_kien = models.TextField()

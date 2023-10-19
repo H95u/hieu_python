@@ -2,9 +2,10 @@ from django.db.models import Q
 from rest_framework import generics
 
 from .models import AddSuKien, Comment, ReportComment, ReportSuKien, SavedImage, SavedNotification, SavedSuKien, \
-    SavedSuKienVideo, User
+    SavedSuKienVideo, User, UserCommentDTO
 from .serializers import AddSuKienSerializer, CommentSerializer, ReportCommentSerializer, ReportSuKienSerializer, \
-    SavedImageSerializer, SavedNotificationSerializer, SavedSuKienSerializer, SavedSuKienVideoSerializer, UserSerializer
+    SavedImageSerializer, SavedNotificationSerializer, SavedSuKienSerializer, SavedSuKienVideoSerializer, \
+    UserSerializer, UserCommentDTOSerializer
 
 
 class AddSuKienList(generics.ListCreateAPIView):
@@ -106,11 +107,44 @@ class UserList(generics.ListCreateAPIView):
             queryset = queryset.filter(email__icontains=email)
         elif ip_register is not None:
             queryset = queryset.filter(ip_register__icontains=ip_register)
-        elif comment is not None:
-            queryset = queryset.filter(Q(comment__noi_dung_Comment__icontains=comment))
-        elif event is not None:
-            queryset = queryset.filter(Q(addsukien__ten_su_kien__icontains=event))
+
         return queryset
+
+
+class UserCommentList(generics.ListCreateAPIView):
+    serializer_class = UserCommentDTOSerializer
+
+    def get_queryset(self):
+        queryset = []
+        comment = self.request.query_params.get('comment')
+        add_su_kien = self.request.query_params.get('event')
+
+        if comment is not None:
+            self.search_by_comment(comment, queryset)
+        elif add_su_kien is not None:
+            self.search_by_addsukien(add_su_kien, queryset)
+
+        return queryset
+
+    def search_by_addsukien(self, add_su_kien, queryset):
+        event = AddSuKien.objects.filter(ten_su_kien__icontains=add_su_kien)
+        users = User.objects.all()
+        matched_event = event.filter(id_user__in=users)
+        for user in users:
+            user_matched_event = matched_event.filter(id_user=user.id)
+            for event in user_matched_event:
+                user_event_dto = UserCommentDTO(user, "", event.ten_su_kien)
+                queryset.append(user_event_dto)
+
+    def search_by_comment(self, comment, queryset):
+        comments = Comment.objects.filter(noi_dung_Comment__icontains=comment)
+        users = User.objects.all()
+        matched_comments = comments.filter(id_user__in=users)
+        for user in users:
+            user_matched_comments = matched_comments.filter(id_user=user.id)
+            for comment in user_matched_comments:
+                user_comment_dto = UserCommentDTO(user, comment.noi_dung_Comment, "")
+                queryset.append(user_comment_dto)
 
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):

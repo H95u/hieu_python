@@ -55,3 +55,17 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
+
+
+class UserCommentDTOSerializer(serializers.Serializer):
+    link_avatar = serializers.CharField()
+    user_name = serializers.CharField()
+    ip_register = serializers.CharField()
+    device_register = serializers.CharField()
+    password = serializers.CharField()
+    email = serializers.CharField()
+    count_sukien = serializers.IntegerField()
+    count_comment = serializers.IntegerField()
+    count_view = serializers.IntegerField()
+    comment = serializers.CharField()
+    event = serializers.CharField()

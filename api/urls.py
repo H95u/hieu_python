@@ -2,7 +2,7 @@ from django.urls import path
 from .views import AddSuKienList, AddSuKienDetail, CommentList, CommentDetail, ReportCommentList, ReportCommentDetail, \
     ReportSuKienList, ReportSuKienDetail, SavedImageList, SavedImageDetail, SavedNotificationList, \
     SavedNotificationDetail, SavedSuKienList, SavedSuKienDetail, SavedSuKienVideoList, SavedSuKienVideoDetail, UserList, \
-    UserDetail
+    UserDetail, UserCommentList
 
 urlpatterns = [
     path('add_sukien/', AddSuKienList.as_view()),
@@ -22,5 +22,6 @@ urlpatterns = [
     path('saved_sukien_video/', SavedSuKienVideoList.as_view()),
     path('saved_sukien_video/<int:pk>/', SavedSuKienVideoDetail.as_view()),
     path('user/', UserList.as_view()),
+    path('user/filter/', UserCommentList.as_view()),
     path('user/<int:pk>/', UserDetail.as_view()),
 ]
