@@ -94,9 +94,9 @@ class UserList(generics.ListCreateAPIView):
         email = self.request.query_params.get('email')
         ip_register = self.request.query_params.get('ip')
         if email is not None:
-            queryset = queryset.filter(email=email)
+            queryset = queryset.filter(email__contains=email)
         elif ip_register is not None:
-            queryset = queryset.filter(ip_register=ip_register)
+            queryset = queryset.filter(ip_register__contains=ip_register)
         return queryset
 
 
