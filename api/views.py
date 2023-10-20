@@ -1,4 +1,5 @@
-from rest_framework import generics
+from rest_framework import generics, status
+from rest_framework.response import Response
 
 from .models import AddSuKien, Comment, ReportComment, ReportSuKien, SavedImage, SavedNotification, SavedSuKien, \
     SavedSuKienVideo, User, UserCommentDTO
@@ -152,3 +153,12 @@ def search_by_addsukien(add_su_kien, queryset):
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        remaining_users = User.objects.all()
+        remaining_users_data = UserSerializer(remaining_users, many=True).data
+
+        return Response(remaining_users_data, status=status.HTTP_200_OK)
+

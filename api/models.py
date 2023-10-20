@@ -2,15 +2,15 @@ from django.db import models
 
 
 class User(models.Model):
-    link_avatar = models.TextField()
-    user_name = models.TextField()
-    ip_register = models.TextField()
-    device_register = models.TextField()
-    password = models.TextField()
-    email = models.TextField()
-    count_sukien = models.IntegerField()
-    count_comment = models.IntegerField()
-    count_view = models.IntegerField()
+    link_avatar = models.TextField(null=True)
+    user_name = models.TextField(null=True)
+    ip_register = models.TextField(null=True)
+    device_register = models.TextField(null=True)
+    password = models.TextField(null=True)
+    email = models.TextField(null=True)
+    count_sukien = models.IntegerField(null=True)
+    count_comment = models.IntegerField(null=True)
+    count_view = models.IntegerField(null=True)
 
 
 class UserCommentDTO:
